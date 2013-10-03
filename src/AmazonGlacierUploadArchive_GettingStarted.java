@@ -14,35 +14,38 @@ import com.amazonaws.services.glacier.transfer.UploadResult;
 
 public class AmazonGlacierUploadArchive_GettingStarted {
 	public static String vaultName = "ExampleVaultAtGlacier";
-	public static String archiveToUpload = "example.txt";
+	public static String archiveToUpload = "D:/example1.zip";
 	public static AmazonGlacierClient client;
 
 	public static void main(String[] args) throws IOException {
 		AWSCredentials credentials = new PropertiesCredentials(AmazonGlacierUploadArchive_GettingStarted.class.getResourceAsStream("AwsCredentials.properties"));
 		
 		client = new AmazonGlacierClient(credentials);
-		client.setEndpoint("https://glacier.us-west-1.amazonaws.com/");
+		client.setEndpoint("glacier.us-west-1.amazonaws.com");
 		
 
 
-		CreateVaultRequest request = new CreateVaultRequest().withVaultName(vaultName);
-		CreateVaultResult result = client.createVault(request);
+		//CreateVaultRequest request = new CreateVaultRequest().withVaultName(vaultName);
+		//CreateVaultResult result = client.createVault(request);
 		
 
-		if(result!=null)
-		System.out.println("Created vault successfully: " + result.getLocation());
+		//if(result!=null)
+		//System.out.println("Created vault successfully: " + result.getLocation());
 		
 		
 		try {
-			ArchiveTransferManager atm = new ArchiveTransferManager(client,
-					credentials);
-
-		
-			UploadResult result1 = atm.upload(vaultName, archiveToUpload,
-					new File(archiveToUpload));
-			System.out.println("Archive ID: " + result1.getArchiveId());
+			ArchiveTransferManager atm = new ArchiveTransferManager(client,credentials);
+			System.out.println("in try");
+			String archiveId = atm.upload(vaultName, "Example1", new File(archiveToUpload)).getArchiveId();
+			System.out.println("after upload");
+			System.out.println(archiveId);
+			
+			//UploadResult result1 = atm.upload(vaultName, archiveToUpload,
+				//	new File(archiveToUpload));
+			//System.out.println("Archive ID: " + result1.getArchiveId());
 		} 
 		catch (Exception e) {
+			System.out.println("in catch");
 			System.err.println(e);
 		}
 	}
